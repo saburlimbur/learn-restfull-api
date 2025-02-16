@@ -34,13 +34,17 @@ export const loginUserValidation = Joi.object({
     .required(),
 }).or('username', 'email'); 
 
-
-
 export const createPostValidation = Joi.object({
   content: Joi.string().required().min(15),
   media: Joi.string().required(),
+  categoryId: Joi.number().required(),
+  tags: Joi.array().items(Joi.number()).required(),
 });
 
 export const tagsValidation = Joi.object({
     name: Joi.string().required().min(3)
+});
+
+export const categoryValidation = Joi.object({
+  name: Joi.string().required().min(3)
 });

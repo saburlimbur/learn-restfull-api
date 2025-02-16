@@ -4,11 +4,13 @@ import { createPostValidation } from '../../validation';
 
 export const createPost = async (req = request, res = response) => {
   try {
-    const { content, media } = req.body;
+    const { content, media, categoryId, tags } = req.body;
 
     const { error: errorValidation } = createPostValidation.validate({
       content,
       media,
+      categoryId: parseInt(categoryId),
+      tags,
     });
 
     if (errorValidation) {
@@ -31,6 +33,16 @@ export const createPost = async (req = request, res = response) => {
         content,
         media,
         authorId: userId,
+        categoryId,
+        tags: {
+          create: tags.map((tagId) => ({
+            tag: { connect: { id: tagId } },
+          })),
+        },
+      },
+      include: {
+        category: true,
+        tags: { include: { tag: true } },
       },
     });
 

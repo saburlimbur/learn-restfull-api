@@ -2,33 +2,22 @@ import { request, response } from 'express';
 import database from '../../connect';
 import { ResponseError } from '../../utils/ResponseError';
 
-export const getPostById = async (req = request, res = response) => {
+export const getCategoryById = async (req = request, res = response) => {
   try {
-    const postId = parseInt(req.params.id);
-    const findPost = await database.post.findUnique({
+    const ctgId = req.params.id;
+    const findCategory = await database.category.findUnique({
       where: {
-        id: postId,
+        id: parseInt(ctgId),
       },
       include: {
-        author: true,
-        comments: true,
-        tags: {
-          include: {
-            tag: true,
-          },
-        },
-        category: true,
+        posts: true,
       },
     });
 
-    if (!findPost) {
-      throw new ResponseError(404, 'Post tidak ditemukan');
-    }
-
     res.status(200).json({
       succes: true,
-      data: findPost,
-      message: 'Success get post by id',
+      data: findCategory,
+      message: 'Success get category by id',
     });
   } catch (error) {
     console.error(error);

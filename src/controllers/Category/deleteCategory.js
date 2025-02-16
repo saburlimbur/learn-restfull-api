@@ -2,20 +2,20 @@ import { request, response } from 'express';
 import database from '../../connect';
 import { ResponseError } from '../../utils/ResponseError';
 
-export const deleteTag = async (req = request, res = response) => {
+export const deleteCategory = async (req = request, res = response) => {
   try {
     const { id } = await req.params;
-    const checkUniqueId = await database.tag.findUnique({
+    const checkUniqueId = await database.category.findUnique({
       where: {
         id: parseInt(id),
       },
     });
 
     if (!checkUniqueId) {
-      throw ResponseError(404, 'Tag tidak ditemukan');
+      throw ResponseError(404, 'Category tidak ditemukan');
     }
 
-    await database.tag.delete({
+    await database.category.delete({
       where: {
         id: parseInt(id),
       },
@@ -24,7 +24,7 @@ export const deleteTag = async (req = request, res = response) => {
     res.status(200).json({
       succes: true,
       data: checkUniqueId,
-      message: 'Success delete tag by id',
+      message: 'Success delete category by id',
     });
   } catch (error) {
     console.error(error);

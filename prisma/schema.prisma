@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id              Int         @id @default(autoincrement())
+  username        String      @unique
+  email           String      @unique
+  phone_number    String
+  password        String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  posts           Post[]      @relation("user_post")
+  comments        Comment[]   @relation("user_comment")
+}
+
+model Post {
+  id              Int         @id @default(autoincrement())
+  content         String
+  media           String?     // gambar atau video
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  authorId        Int
+  author          Users       @relation("user_post", fields: [authorId], references: [id])
+  comments        Comment[]   @relation("post_comment")
+  tags            Tag[]       @relation("post_tags")
+}
+
+model Comment {
+  id              Int         @id @default(autoincrement())
+  content         String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  authorId        Int
+  postId          Int
+  author          Users       @relation("user_comment", fields: [authorId], references: [id])
+  post            Post        @relation("post_comment", fields: [postId], references: [id])
+
+}
+
+model Tag {
+  id              Int           @id @default(autoincrement())
+  name            String        @unique()
+
+  // many to many
+  posts           Post[]         @relation("post_tags")
+}
+
+
+
+
+
+// NB: Tag memiliki banyak tag dan Category memiliki 1 kategory //

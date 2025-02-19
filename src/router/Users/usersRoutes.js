@@ -10,7 +10,7 @@ const users_routes = new Router();
 
 users_routes.post('/users/create', createUsers);
 users_routes.post('/users/login', loginUsers);
-users_routes.get('/users', verifyToken, getUsers);
+users_routes.get('/users', getUsers);
 users_routes.get('/users/:id', verifyToken, getUserById);
 users_routes.put('/users/update/:id', verifyToken, updateUser);
 

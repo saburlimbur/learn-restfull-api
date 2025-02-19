@@ -1,12 +1,13 @@
 import { request, response } from 'express';
-import database from '../../connect';
 import { createPostValidation } from '../../validation';
+import database from '../../connect';
 
 export const createPost = async (req = request, res = response) => {
   try {
-    const { content, media, categoryId, tags } = req.body;
+    const { content, media, categoryId, tags, title } = req.body;
 
     const { error: errorValidation } = createPostValidation.validate({
+      title,
       content,
       media,
       categoryId: parseInt(categoryId),
@@ -28,27 +29,41 @@ export const createPost = async (req = request, res = response) => {
       });
     }
 
+    const tagConnections = tags.map((tagName) => ({
+      tag_name: tagName, // enum
+    }));
+
     const newPost = await database.post.create({
       data: {
+        title,
         content,
         media,
-        authorId: userId,
-        categoryId,
+        author: {
+          connect: {
+            id: userId,
+          },
+        },
+        category: categoryId
+          ? {
+              connect: {
+                id: categoryId,
+              },
+            }
+          : undefined,
         tags: {
-          create: tags.map((tagId) => ({
-            tag: { connect: { id: tagId } },
-          })),
+          create: tagConnections,
         },
       },
       include: {
+        author: true,
         category: true,
-        tags: { include: { tag: true } },
+        tags: true,
       },
     });
 
     return res.status(201).json({
       success: true,
-      message: 'Create post succesfully',
+      message: 'Create post successfully',
       data: newPost,
     });
   } catch (error) {

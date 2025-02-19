@@ -35,6 +35,13 @@ app.get('/', (req, res) => {
   res.json('Hello Dunia!');
 });
 
+app.get('*', (req, res) => {
+  return res.status(404).json({
+    status: false,
+    message: 'Halaman tidak ditemukan',
+  });
+});
+
 app
   .listen(PORT, () => {
     console.log(`

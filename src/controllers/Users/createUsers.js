@@ -5,13 +5,14 @@ import bcrypt from 'bcryptjs';
 
 export const createUsers = async (req = request, res = response) => {
   try {
-    const { username, email, phone_number, password } = req.body;
+    const { username, email, phone_number, password, position } = req.body;
 
     const { error: errorValidation } = createUserValidation.validate({
       username,
       email,
       phone_number,
       password,
+      position,
     });
 
     if (errorValidation) {
@@ -45,6 +46,7 @@ export const createUsers = async (req = request, res = response) => {
         email: isEmail,
         phone_number,
         password: isPasswordHash,
+        position,
       },
     });
 

@@ -12,12 +12,8 @@ export const getPostById = async (req = request, res = response) => {
       include: {
         author: true,
         comments: true,
-        tags: {
-          include: {
-            tag: true,
-          },
-        },
         category: true,
+        tags: true,
       },
     });
 

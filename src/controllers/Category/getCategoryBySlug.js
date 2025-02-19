@@ -2,12 +2,12 @@ import { request, response } from 'express';
 import database from '../../connect';
 import { ResponseError } from '../../utils/ResponseError';
 
-export const getCategoryById = async (req = request, res = response) => {
+export const getCategoryBySlug = async (req = request, res = response) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
     const findCategory = await database.category.findUnique({
       where: {
-        id: parseInt(id),
+        slug,
       },
       include: {
         posts: true,
@@ -15,13 +15,13 @@ export const getCategoryById = async (req = request, res = response) => {
     });
 
     if (!findCategory) {
-      throw new ResponseError(404, `Category with id ${id} not found`);
+      throw new ResponseError(404, `Category with slug ${slug} not found`);
     }
 
     res.status(200).json({
-      succes: true,
+      success: true,
       data: findCategory,
-      message: 'Success get category by id',
+      message: 'Success get category by slug',
     });
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ export const getCategoryById = async (req = request, res = response) => {
 
     res.status(http).json({
       success: false,
-      message: 'Terjadi kesalahan saat mengambil data',
+      message: `Terjadi kesalahan saat mengambil data: ${error.message}`,
     });
   }
 };

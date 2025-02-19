@@ -4,7 +4,14 @@ import { ResponseError } from '../../utils/ResponseError';
 
 export const getPosts = async (req = request, res = response) => {
   try {
-    const result = await database.post.findMany();
+    const result = await database.post.findMany({
+      // join table
+      include: {
+        author: true,
+        category: true,
+        tags: true,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -18,7 +25,7 @@ export const getPosts = async (req = request, res = response) => {
 
     res.status(http).json({
       success: false,
-      message: 'Terjadi kesalahan saat mengambil data',
+      message: `Terjadi kesalahan saat memperbarui post: ${error.message}`,
     });
   }
 };

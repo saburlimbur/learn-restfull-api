@@ -1,6 +1,7 @@
 import { request, response } from 'express';
 import { categoryValidation } from '../../validation';
 import database from '../../connect';
+import { generateSlug } from '../../utils/CategorySlug';
 
 export const createCategory = async (req = request, res = response) => {
   try {
@@ -16,9 +17,12 @@ export const createCategory = async (req = request, res = response) => {
       });
     }
 
+    const slug = generateSlug(name);
+
     const newCategory = await database.category.create({
       data: {
         name,
+        slug,
       },
     });
 

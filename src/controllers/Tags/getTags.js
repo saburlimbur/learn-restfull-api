@@ -1,10 +1,10 @@
 import { request, response } from 'express';
-import database from '../../connect';
+import { TAGS_NAME } from '@prisma/client';
 import { ResponseError } from '../../utils/ResponseError';
 
 export const getTags = async (req = request, res = response) => {
   try {
-    const result = await database.tag.findMany();
+    const result = Object.values(TAGS_NAME);
 
     res.status(200).json({
       success: true,
@@ -12,7 +12,7 @@ export const getTags = async (req = request, res = response) => {
       data: result,
     });
   } catch (error) {
-    console.error(errorOut);
+    console.error(error);
 
     const http = error instanceof ResponseError ? error.status : 500;
 

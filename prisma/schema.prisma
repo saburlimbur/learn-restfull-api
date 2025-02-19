@@ -13,6 +13,7 @@ model Users {
   email       String    @unique
   phone_number String
   password    String
+  position    String    @default("Poetry")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -22,6 +23,7 @@ model Users {
 
 model Post {
   id          Int       @id @default(autoincrement())
+  title       String
   content     String
   media       String?   // url opsional
   createdAt   DateTime  @default(now())
@@ -31,10 +33,10 @@ model Post {
   author      Users     @relation("user_post", fields: [authorId], references: [id])
 
   comments    Comment[] @relation("post_comment")
-  tags        PostOnTag[]
+  tags        Tags[]    @relation("post_tag")
   
   categoryId  Int?
-  category    Category?  @relation(fields: [categoryId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
 }
 
 model Comment {
@@ -53,25 +55,25 @@ model Comment {
 model Category {
   id          Int       @id @default(autoincrement())
   name        String    @unique
+  slug         String   @unique
 
   posts       Post[]
 }
 
-model Tag {
+model Tags {
   id          Int       @id @default(autoincrement())
-  name        String    @unique
+  tag_name    TAGS_NAME
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
 
-  posts       PostOnTag[]
+  posts       Post[]    @relation("post_tag")
 }
 
-model PostOnTag {  
-  postId      Int
-  tagId       Int
-
-  post        Post   @relation(fields: [postId], references: [id])
-  tag         Tag    @relation(fields: [tagId], references: [id])
-
-  @@id([postId, tagId])  // composite PK
+enum TAGS_NAME {
+  Tech
+  Philosophy
+  Music
+  Education
+  Technology
+  Innovation
 }
-
-// NB: Tag memiliki banyak tag dan PostCategory memiliki 1 kategory //

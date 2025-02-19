@@ -5,7 +5,7 @@ import { createUserValidation } from '../../validation';
 export const updateUser = async (req = request, res = response) => {
   try {
     const userId = req.userId;
-    const { username, email, phone_number, password } = req.body;
+    const { username, email, phone_number, password, position } = req.body;
 
     const user = await database.users.findUnique({
       where: { id: userId },
@@ -39,6 +39,7 @@ export const updateUser = async (req = request, res = response) => {
         username,
         email: isEmail || user.email,
         phone_number,
+        position,
       });
 
       if (errorValidation) {
@@ -57,6 +58,7 @@ export const updateUser = async (req = request, res = response) => {
         email: isEmail,
         phone_number,
         password,
+        position,
       },
     });
 

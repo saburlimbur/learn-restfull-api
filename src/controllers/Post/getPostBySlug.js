@@ -2,18 +2,13 @@ import { request, response } from 'express';
 import database from '../../connect';
 import { ResponseError } from '../../utils/ResponseError';
 
-export const getPostById = async (req = request, res = response) => {
+export const getPostBySlug = async (req = request, res = response) => {
   try {
-    const { id } = req.params;
-    const postId = parseInt(id, 10);
-
-    if (isNaN(postId)) {
-      throw new ResponseError(400, 'Invalid ID format');
-    }
+    const { slug } = req.params;
 
     const findPost = await database.post.findUnique({
       where: {
-        id: postId,
+        slug: slug,
       },
       include: {
         author: true,
@@ -28,9 +23,9 @@ export const getPostById = async (req = request, res = response) => {
     }
 
     res.status(200).json({
-      success: true,
+      succes: true,
       data: findPost,
-      message: 'Success get post by id',
+      message: 'Success get post by slug',
     });
   } catch (error) {
     console.error(error);

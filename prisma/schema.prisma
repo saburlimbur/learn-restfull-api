@@ -17,7 +17,7 @@ model Users {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  posts       Post[]    @relation("user_post")
+  posts       Post[]
   comments    Comment[] @relation("user_comment")
 }
 
@@ -29,8 +29,10 @@ model Post {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  slug        String    @unique
+
   authorId    Int
-  author      Users     @relation("user_post", fields: [authorId], references: [id])
+  author      Users     @relation(fields: [authorId], references: [id])
 
   comments    Comment[] @relation("post_comment")
   tags        Tags[]    @relation("post_tag")

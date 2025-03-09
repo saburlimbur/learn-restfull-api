@@ -62,20 +62,28 @@ export const loginUsers = async (req = request, res = response) => {
 
     // jwt
     const jwtKey = process.env.JWT_API_SECRET;
-    const tokens = await jwt.sign(
+    const token = await jwt.sign(
       {
-        userId: user.id,
+        authorId: user.id,
       },
       jwtKey,
       {
-        expiresIn: '2d', // 2 hari
+        expiresIn: '1d',
       }
     );
 
     res.status(200).json({
       success: true,
-      message: 'Login succesfully',
-      token: tokens,
+      message: 'Login successfully',
+      result: {
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          position: user.position,
+        },
+      },
     });
   } catch (error) {
     console.error(error);

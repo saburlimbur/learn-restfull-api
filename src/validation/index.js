@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { TAGS_NAME } from "@prisma/client"
+import { TAGS_NAME } from '@prisma/client';
 
 export const createUserValidation = Joi.object({
   username: Joi.string().required(),
@@ -32,9 +32,8 @@ export const loginUserValidation = Joi.object({
     .optional(),
   password: Joi.string()
     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
-    .min(8)
-    .required(),
-}).or('username', 'email'); 
+    .min(8).required(),
+})  .or('username', 'email');
 
 export const createPostValidation = Joi.object({
   title: Joi.string().required().min(8),
@@ -45,9 +44,18 @@ export const createPostValidation = Joi.object({
 });
 
 export const tagsValidation = Joi.object({
-  tag_name: Joi.string().valid(...Object.values(TAGS_NAME)).required(),
+  tag_name: Joi.string()
+    .valid(...Object.values(TAGS_NAME))
+    .required()
+    .messages({
+      'required.default': 'tag_name is required',
+    }),
 });
 
 export const categoryValidation = Joi.object({
   name: Joi.string().required().min(3),
+});
+
+export const createCommentValidation = Joi.object({
+  content: Joi.string().required().min(5),
 });

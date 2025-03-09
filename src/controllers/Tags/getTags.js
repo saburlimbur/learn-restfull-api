@@ -1,10 +1,14 @@
 import { request, response } from 'express';
-import { TAGS_NAME } from '@prisma/client';
 import { ResponseError } from '../../utils/ResponseError';
+import database from '../../connect';
 
 export const getTags = async (req = request, res = response) => {
   try {
-    const result = Object.values(TAGS_NAME);
+    const tags = await database.tags.findMany();
+
+    const result = tags.map((tag) => ({
+      tag_name: tag.tag_name,
+    }));
 
     res.status(200).json({
       success: true,

@@ -21,14 +21,15 @@ async function verifyToken(req = request, res = response, next) {
     }
 
     const decodedToken = jwt.verify(token, process.env.JWT_API_SECRET);
-    if (!decodedToken || !decodedToken.userId) {
+
+    if (!decodedToken || !decodedToken.authorId) {
       return res.status(401).json({
         status: false,
         message: 'Token tidak valid atau telah kedaluwarsa!',
       });
     }
 
-    req.userId = decodedToken.userId;
+    req.authorId = decodedToken.authorId;
 
     next();
   } catch (error) {
